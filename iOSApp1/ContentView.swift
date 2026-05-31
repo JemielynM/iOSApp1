@@ -1,70 +1,67 @@
 import SwiftUI
-// Stores coffee order information
+
+// This structure stores one Tim Hortons order
 struct CoffeeOrder: Identifiable {
     let id = UUID()
     var name: String
     var drink: String
     var size: String
+    var cream: Int
+    var sugar: Int
 }
-// Main screen of the app
+
 struct ContentView: View {
 
+    // Stores all saved orders
     @State private var orders: [CoffeeOrder] = []
+
+    // Controls which order is currently displayed
     @State private var currentIndex = 0
 
     var body: some View {
-
         NavigationStack {
-
-            VStack {
+            VStack(spacing: 25) {
 
                 if orders.isEmpty {
-
                     Text("No orders yet")
                         .font(.title2)
-                        .padding()
-
+                        .foregroundColor(.gray)
                 } else {
-
-                    VStack(spacing: 20) {
-
+                    VStack(spacing: 15) {
                         Text(orders[currentIndex].name)
                             .font(.largeTitle)
+                            .bold()
 
-                        Text(orders[currentIndex].size)
-                            .font(.title)
-
-                        Text(orders[currentIndex].drink)
+                        Text("\(orders[currentIndex].size) \(orders[currentIndex].drink)")
                             .font(.title2)
 
-                        HStack {
+                        Text("\(orders[currentIndex].cream) Cream, \(orders[currentIndex].sugar) Sugar")
+                            .font(.headline)
 
+                        HStack {
                             Button("Previous") {
                                 if currentIndex > 0 {
                                     currentIndex -= 1
                                 }
                             }
-
-                            .padding()
+                            .buttonStyle(.bordered)
 
                             Button("Next") {
                                 if currentIndex < orders.count - 1 {
                                     currentIndex += 1
                                 }
                             }
-
-                            .padding()
+                            .buttonStyle(.bordered)
                         }
                     }
                     .padding()
                 }
 
                 NavigationLink("Add Order") {
-                    AddOrderView(orders: $orders)
+                    AddOrderView(orders: $orders, currentIndex: $currentIndex)
                 }
-                .padding()
                 .buttonStyle(.borderedProminent)
-
+                .padding()
             }
             .navigationTitle("Tim Hortons")
         }
